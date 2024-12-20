@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "bookify-app",
+    "slug": "bookify-app",
+    "version": "1.0.0",
+    "platforms": ["android"],
+    "android": {
+      "package": "com.bookify.app",
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/bookify.png",
+        "backgroundColor": "#000000"
+      },
+      "newArchEnabled": false
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4f519e1f-122b-40a9-9fbe-d0db517cb3fc"
+      }
+    },
+    "splash": {
+      "image": "./assets/bookify.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "owner": "anm2"
+  }
+}
