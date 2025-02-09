@@ -3,23 +3,37 @@ const express = require("express");
 const User = require("../models/User"); // MongoDB model for users
 const router = express.Router();
 
-// Create a new user with role
 router.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-
+  const { name, email, password, phone, country, dob } = req.body;
+  console.log({ name, email, phone, country, dob });
   try {
-    // Create a new user in MongoDB with the specified role
+    // Parse DOB to a Date object if provided
+    const dobAsDate = dob ? new Date(dob) : null;
+
+    // Optional: Calculate age if DOB is provided
+    const age = dobAsDate
+      ? Math.floor(
+          (new Date() - dobAsDate) / (365.25 * 24 * 60 * 60 * 1000)
+        )
+      : null;
+
+    // Create a new user in MongoDB
     const newUser = new User({
       name,
       email,
-      password, // Either 'customer' or 'worker'
+      password,
+      phone,
+      country,
+      dob: dobAsDate, // Store DOB in the database
+      age, // Include age if required
     });
-
+    
+   console.log("New user object:", newUser);
     await newUser.save();
 
     res
       .status(201)
-      .json({ message: "User created successfully", user: newUser });
+      .json({ message: "User registered successfully", user: newUser });
   } catch (error) {
     res.status(500).json({ message: "Error creating user", error });
   }
