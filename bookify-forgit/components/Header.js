@@ -13,44 +13,38 @@ import {
 import tw from "twrnc";
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
-
-// Sample Books Data for Searching
-const books = [
-  {
-    id: 1,
-    title: "The Origin of Species",
-    price: 19.99,
-    description: "A great book to read.",
-    image:
-      "https://cdn.shopify.com/s/files/1/0070/1884/0133/t/8/assets/pf-71b40b91--Books_1200x.jpg?v=1620061288",
-  },
-  {
-    id: 2,
-    title: "Harry Potter and the Sorcerer's Stone",
-    price: 15.49,
-    description: "A bestseller and must-read.",
-    image:
-      "https://cdn.shopify.com/s/files/1/0070/1884/0133/t/8/assets/pf-b57dac15--Books8_1200x.jpg?v=1620061403",
-  },
-  {
-    id: 3,
-    title: "The Catcher in the Rye",
-    price: 12.99,
-    description: "An insightful and engaging story.",
-    image:
-      "https://cdn.shopify.com/s/files/1/0070/1884/0133/t/8/assets/pf-0b918a84--Books3_1200x.jpg?v=1620061361",
-  },
-];
+import { useCart } from "../context/CartContext";
 
 const Header = () => {
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [books, setBooks] = useState([]); // To store books data fetched from API
   const [filteredBooks, setFilteredBooks] = useState([]);
 
   const navigation = useNavigation();
 
+  const { addToCart } = useCart();
+
   // Animation reference
   const bounceAnim = useRef(new Animated.Value(0)).current;
+
+  // Fetch books data from the API
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await fetch(
+          "https://mtb.meratravelbuddy.com/api/books/books"
+        );
+        const data = await response.json();
+        // console.log("Fetched Data:", data);
+        setBooks(data); // Assuming API response is an array of books
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
 
   // Handle Search
   const handleSearch = (query) => {
@@ -90,8 +84,9 @@ const Header = () => {
       >
         <Image
           source={{
-            uri: "https://meratravelbuddy.com/bookify/img/bookify-horizontal.png",
+            uri: "https://raw.githubusercontent.com/anm27/bookStoreUpdated/refs/heads/main/assets/bookify-horizontal.png",
           }}
+          // source={require("../assets/bookify-horizontal.png")}
           style={tw`w-60 h-10`}
           resizeMode="contain"
         />
@@ -135,10 +130,13 @@ const Header = () => {
               {filteredBooks.length > 0 ? (
                 filteredBooks.map((book) => (
                   <TouchableOpacity
-                    key={book.id}
+                    key={book._id}
                     onPress={() => {
                       setSearchVisible(false); // Close Search Modal
-                      navigation.navigate("BookDetails", { book });
+                      navigation.navigate("SearchedBookDetails", {
+                        book,
+                        addToCart,
+                      });
                     }}
                   >
                     <Text style={tw`p-4 text-lg border-b border-gray-300`}>
