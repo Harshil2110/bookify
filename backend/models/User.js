@@ -12,6 +12,16 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  phone: {
+    type: String,
+    required: true, // Make phone required
+  },
+  country: { type: String },
+  dob: { type: Date },
+  age: {
+    type: Number,
+    min: 0, // Optional: Add constraints for age
+  },
   createdAt: {
     type: Date,
     default: Date.now,
