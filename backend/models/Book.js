@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 
+const reviewSchema = new mongoose.Schema({
+  reviewerName: { type: String, required: true },
+  reviewText: { type: String, required: true },
+  // Optionally, you can add rating, date, etc.
+  date: { type: Date, default: Date.now },
+});
+
 const bookSchema = new mongoose.Schema({
   imgLink: {
     type: String,
@@ -17,6 +24,7 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  reviews: [reviewSchema],
   createdAt: {
     type: Date,
     default: Date.now,
